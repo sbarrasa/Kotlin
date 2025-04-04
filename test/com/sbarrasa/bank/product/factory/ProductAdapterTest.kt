@@ -26,10 +26,10 @@ class ProductAdapterTest {
     @Test
     fun savingAccount() {
         val dto = ProductDTO("CC").apply {
-            attributes["cbu"] = "123456789"
-            attributes["currency"] = Currency.USD
-            attributes["creditLimit"] = 1234.56
-            attributes["dummy"] = "hola"
+            this["cbu"] = "123456789"
+            this["currency"] = Currency.USD
+            this["creditLimit"] = 1234.56
+            this["dummy"] = "hola"
         }
 
         val product: SavingAccount? = ProductAdapter.create(dto)
@@ -43,9 +43,9 @@ class ProductAdapterTest {
     @Test
     fun debitCard() {
         val dto = ProductDTO("TD").apply {
-            attributes["number"] = "987654321"
-            attributes["expirationDate"] = "12/27"
-            attributes["branch"] = Branch.VISA
+            this["number"] = "987654321"
+            this["expirationDate"] = "12/27"
+            this["branch"] = Branch.VISA
         }
 
         val product:DebitCard? = ProductAdapter.create(dto)
@@ -60,7 +60,7 @@ class ProductAdapterTest {
     @Test
     fun cardDate() {
         val dto = ProductDTO("TD").apply {
-            attributes["expirationDate"] = "2027-12-01"
+            this["expirationDate"] = "2027-12-01"
         }
 
         val product:DebitCard? = ProductAdapter.create(dto)
@@ -73,21 +73,21 @@ class ProductAdapterTest {
     @Test
     fun cardBranch() {
         var dto = ProductDTO("TD").apply {
-            attributes["branch"] = Branch.AMEX
+            set("branch", Branch.AMEX)
         }
 
         var product:DebitCard? = ProductAdapter.create(dto)
         assertEquals(Branch.AMEX, product?.branch)
 
         dto = ProductDTO("TD").apply {
-            attributes["branch"] = "AMEX"
+            set("branch","AMEX")
         }
 
         product = ProductAdapter.create(dto)
         assertEquals(Branch.AMEX, product?.branch)
 
         dto = ProductDTO("TD").apply {
-            attributes["branch"] = 2
+            set("branch", 2)
         }
 
         product = ProductAdapter.create(dto)
