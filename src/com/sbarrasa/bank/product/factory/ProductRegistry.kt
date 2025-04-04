@@ -8,17 +8,19 @@ typealias ProductCreator<T> = () -> T
 object ProductRegistry {
     private val creators = HashMap<String, ProductCreator<out Product>>()
 
-    fun <T : Product> register(productRegister: ProductRegister<T>):ProductRegistry {
-        return register(productRegister.productType, productRegister.creator,)
-    }
+    fun <T : Product> register(productRegister: ProductRegister<T>) =
+        register(productRegister.productType, productRegister.creator)
 
-    fun <T : Product> register(productType: String,  creator: ProductCreator<T>):ProductRegistry {
+
+    fun <T : Product> register(productType: String, creator: ProductCreator<T>): ProductRegistry {
         creators[productType] = creator
         return this
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : Product> create(productType: String): T? {
-        return creators[productType]?.invoke() as? T
+    fun <T : Product> create(productType: String): T {
+        val creator = creators[productType]
+            ?: throw ProductTypeNotRegistered(productType)
+        return creator.invoke() as T
     }
 }

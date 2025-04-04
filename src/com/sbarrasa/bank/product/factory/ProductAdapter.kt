@@ -26,8 +26,9 @@ object ProductAdapter {
         return mapper.readerForUpdating(product).readValue(json)
     }
 
-    fun <T: Product> create(dto: ProductDTO): T? {
-        val product: Product = ProductRegistry.create(dto.productType) ?: return null
+    fun <T: Product> create(dto: ProductDTO): T {
+        val product: Product = ProductRegistry.create(dto.productType)
+
         return map(dto, product) as T
     }
 }
