@@ -1,6 +1,6 @@
 package com.sbarrasa.bank.product.types
 
-import com.sbarrasa.bank.product.registry.ProductRegister
+import com.sbarrasa.bank.product.factory.ProductRegister
 
 class CreditCard: Card(CreditCard), CreditProduct {
     override var creditLimit: Double? = null

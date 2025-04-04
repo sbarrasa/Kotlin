@@ -1,4 +1,4 @@
-package com.sbarrasa.bank.product.registry
+package com.sbarrasa.bank.product.factory
 
 import com.sbarrasa.bank.product.Product
 import com.sbarrasa.bank.product.ProductHeader

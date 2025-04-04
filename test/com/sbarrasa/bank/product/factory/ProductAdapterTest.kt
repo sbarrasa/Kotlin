@@ -1,0 +1,99 @@
+package com.sbarrasa.bank.product.factory
+
+import com.sbarrasa.bank.product.Branch
+import com.sbarrasa.bank.product.Currency
+import com.sbarrasa.bank.product.dto.ProductDTO
+import com.sbarrasa.bank.product.types.CheckingAccount
+import com.sbarrasa.bank.product.types.CreditCard
+import com.sbarrasa.bank.product.types.DebitCard
+import com.sbarrasa.bank.product.types.SavingAccount
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import java.time.LocalDate
+
+class ProductAdapterTest {
+    @BeforeEach
+    fun init(){
+        ProductRegistry
+            .register(SavingAccount)
+            .register(CheckingAccount)
+            .register(CreditCard)
+            .register(DebitCard)
+
+    }
+
+    @Test
+    fun savingAccount() {
+        val dto = ProductDTO("CC").apply {
+            attributes["cbu"] = "123456789"
+            attributes["currency"] = Currency.USD
+            attributes["creditLimit"] = 1234.56
+            attributes["dummy"] = "hola"
+        }
+
+        val product: SavingAccount? = ProductAdapter.create(dto)
+
+        assertNotNull(product)
+        assertTrue(product is SavingAccount)
+        assertEquals("123456789", product?.cbu)
+        assertEquals(Currency.USD, product?.currency)
+    }
+
+    @Test
+    fun debitCard() {
+        val dto = ProductDTO("TD").apply {
+            attributes["number"] = "987654321"
+            attributes["expirationDate"] = "12/27"
+            attributes["branch"] = Branch.VISA
+        }
+
+        val product:DebitCard? = ProductAdapter.create(dto)
+
+        assertNotNull(product)
+        assertTrue(product is DebitCard)
+        assertEquals(Branch.VISA, product?.branch)
+        assertEquals("987654321", product?.number)
+        assertEquals(LocalDate.of(2027, 12,1), product?.expirationDate)
+    }
+
+    @Test
+    fun cardDate() {
+        val dto = ProductDTO("TD").apply {
+            attributes["expirationDate"] = "2027-12-01"
+        }
+
+        val product:DebitCard? = ProductAdapter.create(dto)
+
+        assertNotNull(product)
+        assertTrue(product is DebitCard)
+        assertEquals(LocalDate.of(2027, 12,1), product?.expirationDate)
+    }
+
+    @Test
+    fun cardBranch() {
+        var dto = ProductDTO("TD").apply {
+            attributes["branch"] = Branch.AMEX
+        }
+
+        var product:DebitCard? = ProductAdapter.create(dto)
+        assertEquals(Branch.AMEX, product?.branch)
+
+        dto = ProductDTO("TD").apply {
+            attributes["branch"] = "AMEX"
+        }
+
+        product = ProductAdapter.create(dto)
+        assertEquals(Branch.AMEX, product?.branch)
+
+        dto = ProductDTO("TD").apply {
+            attributes["branch"] = 2
+        }
+
+        product = ProductAdapter.create(dto)
+        assertEquals(Branch.AMEX, product?.branch)
+
+    }
+
+
+    }

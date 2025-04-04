@@ -1,4 +1,4 @@
-package com.sbarrasa.bank.product.registry
+package com.sbarrasa.bank.product.factory
 
 import com.sbarrasa.bank.product.Product
 
@@ -6,7 +6,7 @@ import com.sbarrasa.bank.product.Product
 typealias ProductCreator<T> = () -> T
 
 object ProductRegistry {
-    private val creators = mutableMapOf<String, ProductCreator<out Product>>()
+    private val creators = HashMap<String, ProductCreator<out Product>>()
 
     fun <T : Product> register(productRegister: ProductRegister<T>):ProductRegistry {
         return register(productRegister.productType, productRegister.creator,)
